@@ -8,6 +8,7 @@
     "start": "next start -p 80",
     "lint": "next lint . --max-warnings=0",
     "lint:fix": "pnpm lint --fix",
+    "types": "tsc",
     "prepare": "husky"
   },
   "lint-staged": {
