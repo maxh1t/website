@@ -21,11 +21,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Cache node_modules as artifact
+      - name: Compress node_modules
+        run: tar -czf node_modules.tar.gz node_modules
+
+      - name: Upload compressed node_modules as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: node_modules
-          path: node_modules
+          name: node_modules_archive
+          path: node_modules.tar.gz
 
   lint:
     runs-on: ubuntu-latest
@@ -34,11 +37,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Download node_modules from artifact
+      - name: Download and extract node_modules from artifact
         uses: actions/download-artifact@v3
         with:
-          name: node_modules
-          path: node_modules
+          name: node_modules_archive
+
+      - name: Extract node_modules archive
+        run: tar -xzf node_modules.tar.gz
 
       - name: Set up pnpm
         run: corepack enable
