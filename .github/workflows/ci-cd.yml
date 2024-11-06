@@ -1,13 +1,13 @@
 name: CI/CD Pipeline
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
   pull_request:
     branches:
       - '*'
-  workflow_dispatch:
 
 jobs:
   install:
