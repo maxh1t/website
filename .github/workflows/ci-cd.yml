@@ -15,16 +15,14 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Use PNPM
-        uses: pnpm/action-setup@v4
-        id: pnpm-install
-        with:
-          run_install: false
-
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Use PNPM
+        uses: pnpm/action-setup@v4
+        id: pnpm-install
 
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -49,19 +47,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Use PNPM
-        uses: pnpm/action-setup@v4
-        id: pnpm-install
-        with:
-          run_install: false
-
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: pnpm install
+      - name: Use PNPM
+        uses: pnpm/action-setup@v4
+        id: pnpm-install
+        with:
+          run_install: true
 
       - name: Run lint
         run: pnpm lint
