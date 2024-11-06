@@ -81,6 +81,8 @@ jobs:
       - name: Use PNPM
         uses: pnpm/action-setup@v4
         id: pnpm-install
+        with:
+          run_install: true
 
       - name: Run type-check
         run: pnpm types
