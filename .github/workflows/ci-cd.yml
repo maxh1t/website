@@ -112,6 +112,11 @@ jobs:
       - name: Build App
         run: pnpm build
 
+      - name: Move .next to next directory
+        run: |
+          mkdir -p next
+          mv .next/* next/
+
       - name: List files after build (debugging)
         run: ls -al
 
@@ -119,7 +124,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-build
-          path: .next/
+          path: next/
 
   docker_image:
     runs-on: ubuntu-latest
