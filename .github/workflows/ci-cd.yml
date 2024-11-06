@@ -114,8 +114,8 @@ jobs:
 
       - name: Move .next to next directory
         run: |
-          mkdir -p next
-          mv .next/* next/
+          mkdir -p build
+          mv .next/* build/
 
       - name: List files after build (debugging)
         run: ls -al
@@ -124,7 +124,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-build
-          path: next/
+          path: build/
 
   docker_image:
     runs-on: ubuntu-latest
@@ -144,11 +144,17 @@ jobs:
         with:
           run_install: true
 
+      - name: List files after build (debugging)
+        run: ls -al
+
       - name: Download .next artifact
         uses: actions/download-artifact@v4
         with:
           name: app-build
           path: .next/
+
+      - name: List files after build (debugging)
+        run: ls -al
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
