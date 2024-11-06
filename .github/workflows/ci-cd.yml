@@ -12,31 +12,38 @@ jobs:
   install:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Repo
         uses: actions/checkout@v3
-        with:
-          node-version: '20'
 
-      - name: Setup Node.js
+      - name: Use PNPM
+        uses: pnpm/action-setup@v4
+        id: pnpm-install
+        with:
+          version: 9.12.3
+          run_install: false
+
+      - name: Use Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          version: 9.12.3
+          node-version: 20
+          cache: "pnpm"
 
-      - name: Set up pnpm
-        run: corepack enable
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
 
-      - name: Cache pnpm store
-        uses: actions/cache@v3
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
         with:
-          node-version: '20'
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --store-dir ~/.pnpm-store
-        id: pnpm_install
+        run: pnpm install
 
   lint:
     runs-on: ubuntu-latest
@@ -45,22 +52,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Use PNPM
+        uses: pnpm/action-setup@v4
+        id: pnpm-install
+        with:
+          version: 9.12.3
+          run_install: false
+
+      - name: Use Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          version: 9.12.3
+          node-version: 20
+          cache: "pnpm"
 
-      - name: Restore pnpm store from cache
-        uses: actions/cache@v3
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
         with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: Set up pnpm
-        run: corepack enable
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --store-dir ~/.pnpm-store
+        run: pnpm install
 
       - name: Run lint
         run: pnpm lint
@@ -72,22 +92,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Use PNPM
+        uses: pnpm/action-setup@v4
+        id: pnpm-install
+        with:
+          version: 9.12.3
+          run_install: false
+
+      - name: Use Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          version: 9.12.3
+          node-version: 20
+          cache: "pnpm"
 
-      - name: Restore pnpm store from cache
-        uses: actions/cache@v3
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
         with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: Set up pnpm
-        run: corepack enable
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --store-dir ~/.pnpm-store
+        run: pnpm install
 
       - name: Run type-check
         run: pnpm types
