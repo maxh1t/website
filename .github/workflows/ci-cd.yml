@@ -40,52 +40,51 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-#  lint:
-#    runs-on: ubuntu-latest
-#    needs: install
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Use Node.js 20
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: 20
-#
-#      - name: Use PNPM
-#        uses: pnpm/action-setup@v4
-#        id: pnpm-install
-#        with:
-#          run_install: true
-#
-#      - name: Run lint
-#        run: pnpm lint
-#
-#  types:
-#    runs-on: ubuntu-latest
-#    needs: install
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Use Node.js 20
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: 20
-#
-#      - name: Use PNPM
-#        uses: pnpm/action-setup@v4
-#        id: pnpm-install
-#        with:
-#          run_install: true
-#
-#      - name: Run type-check
-#        run: pnpm types
+  lint:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Use PNPM
+        uses: pnpm/action-setup@v4
+        id: pnpm-install
+        with:
+          run_install: true
+
+      - name: Run lint
+        run: pnpm lint
+
+  types:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Use PNPM
+        uses: pnpm/action-setup@v4
+        id: pnpm-install
+        with:
+          run_install: true
+
+      - name: Run type-check
+        run: pnpm types
 
   build:
     runs-on: ubuntu-latest
-#    needs: [ lint, types ]
-    needs: install
+    needs: [ lint, types ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -112,18 +111,15 @@ jobs:
       - name: Build App
         run: pnpm build
 
-      - name: Move .next to next directory
+      - name: Move .next to build directory
         run: |
           mkdir -p build
           mv .next/* build/
 
-      - name: List files after build (debugging)
-        run: ls -al
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-build
+          name: build
           path: build/
 
   docker_image:
@@ -144,17 +140,11 @@ jobs:
         with:
           run_install: true
 
-      - name: List files after build (debugging)
-        run: ls -al
-
-      - name: Download .next artifact
+      - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: app-build
+          name: build
           path: .next/
-
-      - name: List files after build (debugging)
-        run: ls -al
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
