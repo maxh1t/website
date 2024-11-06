@@ -4,7 +4,7 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
-COPY /.next ./.next
+COPY /.dist ./.dist
 COPY /node_modules ./node_modules
 COPY package.json ./package.json
 

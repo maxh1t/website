@@ -100,10 +100,10 @@ jobs:
         with:
           run_install: true
 
-      - name: Cache .next/cache
+      - name: Cache .dist/cache
         uses: actions/cache@v4
         with:
-          path: .next/cache
+          path: .dist/cache
           key: ${{ runner.os }}-next-cache-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-next-cache-
@@ -112,13 +112,13 @@ jobs:
         run: pnpm build
 
       - name: List files after build (debugging)
-        run: ls -al .next || echo ".next directory not found"
+        run: ls -al .dist || echo ".dist directory not found"
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-build
-          path: ${{ github.workspace }}/.next/
+          path: .dist/
 
   docker_image:
     runs-on: ubuntu-latest
@@ -138,11 +138,11 @@ jobs:
         with:
           run_install: true
 
-      - name: Download .next artifact
+      - name: Download .dist artifact
         uses: actions/download-artifact@v4
         with:
           name: app-build
-          path: ${{ github.workspace }}/.next/
+          path: .dist/
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
